@@ -1,8 +1,8 @@
 package com.androidmaps.ghidturistic.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import com.androidmaps.ghidturistic.R;
@@ -19,6 +19,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private FirebaseService firebaseService;
+
+    private boolean myLocationMarkerAdded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +43,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        googleMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationChangeListener(arg0 -> {
+            if (!myLocationMarkerAdded) {
+                final LatLng location = new LatLng(arg0.getLatitude(), arg0.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(location).title("It's Me!"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 21.0f));
+            }
+            myLocationMarkerAdded = true;
+        });
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(37, 25);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Romania"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        Log.d("Map", "Map loaded");
     }
 
     @Override
@@ -62,9 +69,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @Override public void onPlaceLoaded(Place place) {
+    @Override public void onPlaceLoaded(Place place, boolean move) {
         LatLng location = new LatLng(place.getLatitude(), place.getLongitude());
         mMap.addMarker(new MarkerOptions().position(location).title(place.getName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+        if (move) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
+        }
     }
 }

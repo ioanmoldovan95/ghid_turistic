@@ -28,7 +28,7 @@ public class FirebaseService {
     public FirebaseService(Context context, MapCallback mapCallback) {
         this.context = context;
         this.mapCallback = mapCallback;
-        initDatabase();
+        //initDatabase();
         readDatabase();
     }
 
@@ -40,7 +40,7 @@ public class FirebaseService {
             @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                     Place place = childSnapshot.getValue(Place.class);
-                    mapCallback.onPlaceLoaded(place);
+                    mapCallback.onPlaceLoaded(place, false);
                 }
 
             }
