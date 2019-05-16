@@ -6,25 +6,21 @@ import java.util.Objects;
 public class Place {
 
     private String uuid;
-    private LatLng location;
     private String name;
     private String description;
     private String imageUrl;
+    private double latitude;
+    private double longitude;
+
+    public Place() {}
 
     public Place(LatLng location, String name, String description, String imageUrl) {
-        this.location = location;
+        this.latitude = location.latitude;
+        this.longitude = location.longitude;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
         uuid = String.format("%d", hashCode());
-    }
-
-    public LatLng getLocation() {
-        return location;
-    }
-
-    public void setLocation(LatLng location) {
-        this.location = location;
     }
 
     public String getName() {
@@ -51,6 +47,30 @@ public class Place {
         this.imageUrl = imageUrl;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -62,6 +82,6 @@ public class Place {
     }
 
     @Override public int hashCode() {
-        return Objects.hash(location, name, description, imageUrl);
+        return Objects.hash(latitude, longitude, name, description, imageUrl);
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import com.androidmaps.ghidturistic.R;
+import com.androidmaps.ghidturistic.network.models.Place;
 import com.androidmaps.ghidturistic.network.places.FirebaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,7 +15,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapCallback {
 
     private GoogleMap mMap;
     private FirebaseService firebaseService;
@@ -23,7 +24,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        firebaseService = new FirebaseService(this);
+        firebaseService = new FirebaseService(this, this);
         firebaseService.requestLocationPermission(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -59,5 +60,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         }
+    }
+
+    @Override public void onPlaceLoaded(Place place) {
+        LatLng location = new LatLng(place.getLatitude(), place.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(location).title(place.getName()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
     }
 }

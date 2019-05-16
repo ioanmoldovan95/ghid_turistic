@@ -1,27 +1,54 @@
 package com.androidmaps.ghidturistic.network.places;
 
     import android.Manifest;
-    import android.app.Activity;
-    import android.content.Context;
-    import android.content.pm.PackageManager;
-    import androidx.core.app.ActivityCompat;
-    import androidx.core.content.ContextCompat;
-    import com.androidmaps.ghidturistic.network.models.Place;
-    import com.google.android.gms.maps.model.LatLng;
-    import com.google.firebase.database.DatabaseReference;
-    import com.google.firebase.database.FirebaseDatabase;
-    import java.util.ArrayList;
-    import java.util.List;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import com.androidmaps.ghidturistic.main.MapCallback;
+import com.androidmaps.ghidturistic.network.models.Place;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FirebaseService {
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private Context context;
+    private MapCallback mapCallback;
 
-    public FirebaseService(Context context) {
+    public FirebaseService(Context context, MapCallback mapCallback) {
         this.context = context;
-        //initDatabase();
+        this.mapCallback = mapCallback;
+        initDatabase();
+        readDatabase();
+    }
+
+    private void readDatabase() {
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference = firebaseDatabase.getReference("places");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    Place place = childSnapshot.getValue(Place.class);
+                    mapCallback.onPlaceLoaded(place);
+                }
+
+            }
+
+            @Override public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void requestLocationPermission(Activity context) {
