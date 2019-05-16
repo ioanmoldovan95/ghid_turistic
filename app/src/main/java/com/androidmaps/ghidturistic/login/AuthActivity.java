@@ -2,35 +2,35 @@ package com.androidmaps.ghidturistic.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
-import com.androidmaps.ghidturistic.MapsActivity;
 import com.androidmaps.ghidturistic.R;
+import com.androidmaps.ghidturistic.main.MapsActivity;
 import com.google.android.gms.common.util.Strings;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class AuthActivity extends Activity {
-
-    private static final String LOGIN_STATUS = "login_status";
 
     private EditText usernameEdittext, passwordEdittext, confirmPasswordEdittext;
     private Button ctaButton;
     private TextView loginPageButton, signUpPageButton;
 
-    private SharedPreferences sharedPreferences;
+    private FirebaseAuth firebaseAuth;
 
     private boolean shouldSignUpUser = false;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_activity);
-        sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
-        boolean isUserLoggedIn = sharedPreferences.getBoolean(LOGIN_STATUS, false);
-        if (isUserLoggedIn) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
             startMapActivity();
         }
         initViews();
@@ -70,10 +70,10 @@ public class AuthActivity extends Activity {
     }
 
     private void loginUser() {
-        String username = usernameEdittext.getText().toString();
+        String email = usernameEdittext.getText().toString();
         String password = passwordEdittext.getText().toString();
-        if (Strings.isEmptyOrWhitespace(username) || Strings.isEmptyOrWhitespace(password)) {
-            if (Strings.isEmptyOrWhitespace(username)) {
+        if (Strings.isEmptyOrWhitespace(email) || Strings.isEmptyOrWhitespace(password)) {
+            if (Strings.isEmptyOrWhitespace(email)) {
                 usernameEdittext.setError("Username empty");
             }
             if (Strings.isEmptyOrWhitespace(password)) {
@@ -84,20 +84,40 @@ public class AuthActivity extends Activity {
         if (shouldSignUpUser) {
             String confirmPassword = confirmPasswordEdittext.getText().toString();
             if (password.equals(confirmPassword)) {
-                signUpUser(username, password);
+                signUpUser(email, password);
             }
         }
-        sharedPreferences.edit().putBoolean(LOGIN_STATUS, true).apply();
-        startMapActivity();
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    startMapActivity();
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(AuthActivity.this, "No user found with these credentials. Maybe you want to sign up instead?",
+                                   Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
-    private void signUpUser(String username, String password) {
-        //TODO register new user
+    private void signUpUser(String email, String password) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                // Sign in success, update UI with the signed-in user's information
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                startMapActivity();
+            } else {
+                // If sign in fails, display a message to the user.
+                Toast.makeText(AuthActivity.this, "Authentication failed.",
+                               Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void startMapActivity() {
         Intent intent = new Intent(this, MapsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }

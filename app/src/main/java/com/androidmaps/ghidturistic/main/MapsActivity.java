@@ -1,9 +1,12 @@
-package com.androidmaps.ghidturistic;
+package com.androidmaps.ghidturistic.main;
 
-import android.util.Log;
-import androidx.fragment.app.FragmentActivity;
+import android.content.Intent;
 import android.os.Bundle;
-
+import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import com.androidmaps.ghidturistic.R;
+import com.androidmaps.ghidturistic.network.places.FirebaseService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,11 +17,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private FirebaseService firebaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        firebaseService = new FirebaseService(this);
+        firebaseService.requestLocationPermission(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
             .findFragmentById(R.id.map);
@@ -43,5 +49,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Romania"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         Log.d("Map", "Map loaded");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FirebaseService.LOCATION_PERMISSION_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+            }
+        }
     }
 }

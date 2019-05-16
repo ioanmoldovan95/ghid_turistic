@@ -6,4 +6,5 @@
   <string name="user_name">User name</string>
   <string name="password">Password</string>
   <string name="confirm_password">Confirm Password</string>
+  <string name="location_serv_disabled_error">Location services seem to be disabled. Please enable in order for the app to work properly</string>
 </resources>
