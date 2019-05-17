@@ -64,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FirebaseService.LOCATION_PERMISSION_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
+                firebaseService.loadDatabase();
             }
         }
     }

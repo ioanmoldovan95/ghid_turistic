@@ -24,15 +24,17 @@ public class FirebaseService {
 
     private Context context;
     private MapCallback mapCallback;
+    private List<Place> places;
 
     public FirebaseService(Context context, MapCallback mapCallback) {
         this.context = context;
         this.mapCallback = mapCallback;
+        places = new ArrayList<>();
         //initDatabase();
-        readDatabase();
+        loadDatabase();
     }
 
-    private void readDatabase() {
+    public void loadDatabase() {
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference databaseReference = firebaseDatabase.getReference("places");
 
@@ -40,6 +42,7 @@ public class FirebaseService {
             @Override public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                     Place place = childSnapshot.getValue(Place.class);
+                    places.add(place);
                     mapCallback.onPlaceLoaded(place, false);
                 }
 
