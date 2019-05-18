@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "802463740920",
+    "firebase_url": "https://ghid-turistic-240707.firebaseio.com",
+    "project_id": "ghid-turistic-240707",
+    "storage_bucket": "ghid-turistic-240707.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802463740920:android:a973ac99ed5fc4cf",
+        "android_client_info": {
+          "package_name": "com.androidmaps.ghidturistic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802463740920-3eatq1lgcojho74ui2vbfduqpar5ocfb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.androidmaps.ghidturistic",
+            "certificate_hash": "3eb50001a937007dc6a3ce36a0b6a4ec531e77b8"
+          }
+        },
+        {
+          "client_id": "802463740920-j3vsvd9u9tjpvft88km3ur8bipesk9h4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmp07zJZc5wTmn5Y-RZZD2ZOnwRzxFNnI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802463740920-j3vsvd9u9tjpvft88km3ur8bipesk9h4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

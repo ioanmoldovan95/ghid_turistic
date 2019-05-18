@@ -17,4 +17,12 @@
     <item name="android:textColor">@color/light_blue</item>
   </style>
 
+  <style name="search_field_style" >
+    <item name="android:textSize">18sp</item>
+    <item name="android:paddingEnd">30dp</item>
+    <item name="android:paddingTop">10dp</item>
+    <item name="android:paddingBottom">10dp</item>
+    <item name="android:textColor">@color/light_blue</item>
+  </style>
+
 </resources>

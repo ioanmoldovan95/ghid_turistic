@@ -1,6 +1,8 @@
 package com.androidmaps.ghidturistic.network.models;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 import java.util.Objects;
 
 public class Place {
@@ -11,15 +13,17 @@ public class Place {
     private String imageUrl;
     private double latitude;
     private double longitude;
+    private List<String> types;
 
     public Place() {}
 
-    public Place(LatLng location, String name, String description, String imageUrl) {
+    public Place(LatLng location, String name, String description, String imageUrl, List<String> types) {
         this.latitude = location.latitude;
         this.longitude = location.longitude;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.types = types;
         uuid = String.format("%d", hashCode());
     }
 
@@ -69,6 +73,14 @@ public class Place {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public List<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 
     @Override public boolean equals(Object o) {
