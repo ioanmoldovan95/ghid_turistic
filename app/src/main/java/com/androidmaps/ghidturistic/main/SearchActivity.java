@@ -84,7 +84,11 @@ public class SearchActivity extends Activity {
         List<Place> results = placesManager.getPlaces(null, searchTerm);
         results = placesManager.getPlaces(results, latText, lngText);
 
-        //TODO filter by type
+        results = placesManager.getPlaces(results, selectedTypes);
 
+        placesManager.setSearchResults(results);
+
+        setResult(RESULT_OK);
+        this.finish();
     }
 }

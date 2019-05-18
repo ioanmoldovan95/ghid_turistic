@@ -72,9 +72,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FirebaseService.LOCATION_PERMISSION_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == FirebaseService.LOCATION_PERMISSION_REQUEST_CODE) {
                 firebaseService.loadDatabase();
+            }
+            if (requestCode == SEARCH_REQUEST_CODE) {
+                //TODO set results for search
             }
         }
     }
@@ -94,4 +97,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final Intent intent = new Intent(this, SearchActivity.class);
         startActivityForResult(intent, SEARCH_REQUEST_CODE);
     }
+
+
 }
