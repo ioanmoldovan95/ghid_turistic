@@ -31,11 +31,11 @@
   <!-- actual login / sign up fields -->
 
   <EditText
-      android:id="@+id/username_edittext"
+      android:id="@+id/email_edittext"
       android:layout_width="200dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="80dp"
-      android:hint="@string/user_name"
+      android:hint="@string/email"
       android:layout_marginStart="60dp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/login_page_button"/>
@@ -49,7 +49,7 @@
       android:inputType="textPassword"
       android:layout_marginStart="60dp"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/username_edittext"/>
+      app:layout_constraintTop_toBottomOf="@id/email_edittext"/>
 
   <EditText
       android:id="@+id/confirm_password_edittext"

@@ -49,6 +49,14 @@ public class PlacesManager {
         this.searchResults = searchResults;
     }
 
+    public Place getPlaceByUuid(String uuid) {
+        for (Place place : places) {
+            if (place.getUuid().equals(uuid)) {
+                return place;
+            }
+        }
+        return null;
+    }
 
     public List<Place> getPlaces(List<Place> filteredPlaces, String searchTerm) {
         final List<Place> searchItems = filteredPlaces != null ? filteredPlaces : places;
@@ -57,7 +65,7 @@ public class PlacesManager {
         }
         final List<Place> results = new ArrayList<>();
         for (Place place : searchItems) {
-            if (place.getName().contains(searchTerm)) {
+            if (place.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
                 results.add(place);
             }
         }
@@ -89,7 +97,7 @@ public class PlacesManager {
         final List<Place> results = new ArrayList<>();
         for (String type : placeTypes) {
             for (Place place : searchItems) {
-                if (!results.contains(place) && place.getTypes().contains(type)) {
+                if (place.getTypes() != null && !results.contains(place) && place.getTypes().contains(type)) {
                     results.add(place);
                 }
             }

@@ -7,15 +7,17 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import com.androidmaps.ghidturistic.R;
 import com.androidmaps.ghidturistic.network.models.Place;
+import com.androidmaps.ghidturistic.network.places.PlacesManager;
 import com.squareup.picasso.Picasso;
 
 public class PlaceDetailsActivity extends Activity {
 
-    public static final String BUNDLE_VALUE_PLACE = "bundle_value_place";
+    public static final String BUNDLE_PLACE_UUID = "bundle_place_uuid";
 
     private TextView nameTextView, latTextView, lngTextView, descriptionTextView;
     private ImageView placeImageView;
     private Utils utils;
+    private PlacesManager placesManager;
 
     private Place place;
 
@@ -25,7 +27,8 @@ public class PlaceDetailsActivity extends Activity {
         setContentView(R.layout.activity_place_details);
         initFields();
 
-        place = (Place)this.getIntent().getExtras().getSerializable(BUNDLE_VALUE_PLACE);
+        final String placeUuid = this.getIntent().getExtras().getString(BUNDLE_PLACE_UUID);
+        place = placesManager.getPlaceByUuid(placeUuid);
 
         bindFields();
     }
@@ -45,5 +48,6 @@ public class PlaceDetailsActivity extends Activity {
         descriptionTextView = findViewById(R.id.description);
         placeImageView = findViewById(R.id.place_image);
         utils = Utils.getInstance();
+        placesManager = PlacesManager.getInstance();
     }
 }

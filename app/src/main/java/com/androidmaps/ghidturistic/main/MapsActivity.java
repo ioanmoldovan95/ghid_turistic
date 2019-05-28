@@ -3,6 +3,7 @@ package com.androidmaps.ghidturistic.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentActivity;
@@ -10,6 +11,7 @@ import com.androidmaps.ghidturistic.R;
 import com.androidmaps.ghidturistic.network.models.Place;
 import com.androidmaps.ghidturistic.network.places.FirebaseService;
 import com.androidmaps.ghidturistic.network.places.PlacesManager;
+import com.google.android.gms.common.util.Strings;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,14 +19,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapCallback {
 
-    private static final int SEARCH_REQUEST_CODE = 1;
+    private static final int SEARCH_REQUEST_CODE = 10;
 
     private GoogleMap mMap;
     private FirebaseService firebaseService;
+    private PlacesManager placesManager;
     private SearchView searchView;
+    private ImageView resetButton;
 
     private boolean myLocationMarkerAdded = false;
 
@@ -34,12 +39,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         firebaseService = new FirebaseService(this, this, PlacesManager.getInstance());
         firebaseService.requestLocationPermission(this);
+        placesManager = PlacesManager.getInstance();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         searchView = findViewById(R.id.search_bar);
         searchView.setOnClickListener(v -> startSearchActivity());
+        resetButton = findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(v -> resetMap());
     }
 
     /**
@@ -60,16 +68,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (!myLocationMarkerAdded) {
                 final LatLng location = new LatLng(arg0.getLatitude(), arg0.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(location).title("It's Me!"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 21.0f));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10.0f));
             }
             myLocationMarkerAdded = true;
         });
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override public void onInfoWindowClick(Marker marker) {
-
+        mMap.setOnInfoWindowClickListener(marker -> {
+            String uuid = (String) marker.getTag();
+            if(!Strings.isEmptyOrWhitespace(uuid)) {
+                startPlaceDetailsActivity(uuid);
             }
         });
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+    }
 
+    private void startPlaceDetailsActivity(String uuid) {
+        Intent intent = new Intent(this, PlaceDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(PlaceDetailsActivity.BUNDLE_PLACE_UUID, uuid);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     @Override
@@ -80,7 +98,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 firebaseService.loadDatabase();
             }
             if (requestCode == SEARCH_REQUEST_CODE) {
-                //TODO set results for search
+                setSearchResults();
+            }
+        }
+    }
+
+    private void setSearchResults() {
+        final List<Place> searchResults = placesManager.getSearchResults();
+        mMap.clear();
+        if (searchResults != null) {
+            for (Place place : searchResults) {
+                onPlaceLoaded(place, false);
             }
         }
     }
@@ -102,5 +130,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivityForResult(intent, SEARCH_REQUEST_CODE);
     }
 
+    private void resetMap() {
+        final List<Place> places = placesManager.getPlaces();
+        for (Place place : places) {
+            onPlaceLoaded(place, false);
+        }
+    }
 
 }

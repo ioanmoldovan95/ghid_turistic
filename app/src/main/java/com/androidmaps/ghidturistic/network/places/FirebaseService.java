@@ -33,8 +33,8 @@ public class FirebaseService {
         this.context = context;
         this.mapCallback = mapCallback;
         this.placesManager = placesManager;
-        initDatabase();
-        initPlaceTypes();
+        //initDatabase();
+        //initPlaceTypes();
         loadDatabase();
     }
 
@@ -88,10 +88,14 @@ public class FirebaseService {
 
     private void initDatabase() {
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference databaseReference = firebaseDatabase.getReference("places");
+        final DatabaseReference databaseReference = firebaseDatabase.getReference("places2");
 
+        final List<String> types = new ArrayList<>();
+        types.add("Restaurant");
+        types.add("Pub");
+        types.add("Fun");
         final List<Place> places = new ArrayList<>();
-        places.add(new Place(new LatLng(47, 31), "New place 1", "this is the first new place", "", null));
+        places.add(new Place(new LatLng(47, 31), "New place 1", "this is the first new place", "", types));
         places.add(new Place(new LatLng(43, 53), "New place 2", "this is the first new place", "", null));
         places.add(new Place(new LatLng(64, 31), "New place 3", "this is the first new place", "", null));
         places.add(new Place(new LatLng(57, 31), "New place 4", "this is the first new place", "", null));

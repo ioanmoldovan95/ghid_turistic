@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AuthActivity extends Activity {
 
-    private EditText usernameEdittext, passwordEdittext, confirmPasswordEdittext;
+    private EditText emailEdittext, passwordEdittext, confirmPasswordEdittext;
     private Button ctaButton;
     private TextView loginPageButton, signUpPageButton;
 
@@ -39,7 +39,7 @@ public class AuthActivity extends Activity {
     }
 
     private void initViews() {
-        usernameEdittext = findViewById(R.id.username_edittext);
+        emailEdittext = findViewById(R.id.email_edittext);
         passwordEdittext = findViewById(R.id.password_edittext);
         confirmPasswordEdittext = findViewById(R.id.confirm_password_edittext);
         ctaButton = findViewById(R.id.auth_button);
@@ -70,11 +70,11 @@ public class AuthActivity extends Activity {
     }
 
     private void loginUser() {
-        String email = usernameEdittext.getText().toString();
+        String email = emailEdittext.getText().toString();
         String password = passwordEdittext.getText().toString();
         if (Strings.isEmptyOrWhitespace(email) || Strings.isEmptyOrWhitespace(password)) {
             if (Strings.isEmptyOrWhitespace(email)) {
-                usernameEdittext.setError("Username empty");
+                emailEdittext.setError("Username empty");
             }
             if (Strings.isEmptyOrWhitespace(password)) {
                 passwordEdittext.setError("Password Empty");
@@ -85,6 +85,7 @@ public class AuthActivity extends Activity {
             String confirmPassword = confirmPasswordEdittext.getText().toString();
             if (password.equals(confirmPassword)) {
                 signUpUser(email, password);
+                return;
             }
         }
         firebaseAuth.signInWithEmailAndPassword(email, password)

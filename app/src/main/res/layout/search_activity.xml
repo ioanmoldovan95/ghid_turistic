@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/login_margin_top"
         android:inputType="numberDecimal"
-        android:text="@string/latitude"
+        android:hint="@string/latitude"
         app:layout_constraintEnd_toStartOf="@id/longitude_edittext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/login_margin_top"
         android:inputType="numberDecimal"
-        android:text="@string/longitude"
+        android:hint="@string/longitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/latitude_edittext"
         app:layout_constraintTop_toTopOf="parent" />
