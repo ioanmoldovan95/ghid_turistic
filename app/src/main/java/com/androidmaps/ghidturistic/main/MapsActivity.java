@@ -3,12 +3,9 @@ package com.androidmaps.ghidturistic.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentActivity;
-
 import com.androidmaps.ghidturistic.R;
 import com.androidmaps.ghidturistic.network.models.Place;
 import com.androidmaps.ghidturistic.network.places.FirebaseService;
@@ -18,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapCallback {
@@ -66,6 +64,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             myLocationMarkerAdded = true;
         });
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override public void onInfoWindowClick(Marker marker) {
+
+            }
+        });
 
     }
 
@@ -86,7 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onPlaceLoaded(Place place, boolean moveToLocation) {
         if (mMap != null) {
             LatLng location = new LatLng(place.getLatitude(), place.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(location).title(place.getName()));
+            final Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(place.getName()));
+            marker.setTag(place.getUuid());
             if (moveToLocation) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f));
             }

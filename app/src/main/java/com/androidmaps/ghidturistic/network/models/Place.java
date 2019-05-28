@@ -3,9 +3,10 @@ package com.androidmaps.ghidturistic.network.models;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Place {
+public class Place implements Serializable {
 
     private String uuid;
     private String name;
